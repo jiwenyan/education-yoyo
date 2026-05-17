@@ -1,0 +1,12 @@
+.starCounter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f5a623;
+}
+
+.count {
+  color: #555;
+}

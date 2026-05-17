@@ -1,0 +1,48 @@
+.container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.track {
+  fill: none;
+  stroke: #e8e8e8;
+}
+
+.fill {
+  fill: none;
+  stroke: #4a90d9;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dashoffset 0.35s ease;
+}
+
+.label {
+  position: absolute;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #4a90d9;
+}
+
+/* size presets for inline style avoidance */
+.sizeSm {
+  width: 60px;
+  height: 60px;
+}
+
+.sizeMd {
+  width: 80px;
+  height: 80px;
+}
+
+.sizeLg {
+  width: 100px;
+  height: 100px;
+}
+
+.sizeXl {
+  width: 120px;
+  height: 120px;
+}

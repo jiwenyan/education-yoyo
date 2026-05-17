@@ -1,0 +1,30 @@
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon svg {
+  display: block;
+}
+
+.sizeSm {
+  width: 16px;
+  height: 16px;
+}
+
+.sizeMd {
+  width: 24px;
+  height: 24px;
+}
+
+.sizeLg {
+  width: 32px;
+  height: 32px;
+}
+
+.sizeXl {
+  width: 48px;
+  height: 48px;
+}
