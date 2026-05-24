@@ -1,0 +1,87 @@
+.card {
+  text-align: center;
+  border: 2px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: var(--subject-color, #4a90d9);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--subject-color, #333);
+}
+
+.description {
+  color: #666;
+  margin: 0 0 16px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.statLabel {
+  font-size: 0.85rem;
+  color: #888;
+  min-width: 60px;
+  text-align: right;
+}
+
+.statValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #444;
+  min-width: 40px;
+}
+
+.progressBar {
+  flex: 1;
+  max-width: 120px;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--subject-color, #4a90d9);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.starsValue {
+  font-size: 1.2rem;
+  color: #f5a623;
+  letter-spacing: 2px;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+}

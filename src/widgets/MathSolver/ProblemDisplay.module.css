@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  user-select: none;
+}
+
+.number {
+  color: #333;
+}
+
+.operator {
+  color: #4a90d9;
+}
+
+.equals {
+  color: #888;
+}
+
+.question {
+  color: #f5a623;
+  font-size: 3rem;
+}

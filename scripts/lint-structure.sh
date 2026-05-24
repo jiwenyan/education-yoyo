@@ -42,6 +42,7 @@ if [ -d "$SRC_DIR/components" ]; then
 fi
 
 # Rule 4: .jsx files in pages/widgets/components must have a matching folder (skip test files)
+# Also skip subcomponents inside a widget's own folder (e.g., widget/SubComponent.jsx)
 for LAYER in pages widgets components; do
     LAYER_DIR="$SRC_DIR/$LAYER"
     [ -d "$LAYER_DIR" ] || continue
@@ -50,12 +51,17 @@ for LAYER in pages widgets components; do
         BASENAME=$(basename "$JSX_FILE" .jsx)
         PARENT_DIR=$(dirname "$JSX_FILE")
         FOLDER_NAME=$(basename "$PARENT_DIR")
+        GRANDPARENT_NAME=$(basename "$(dirname "$PARENT_DIR")")
         # Allow index.jsx inside its own folder
         if [ "$BASENAME" = "index" ]; then
             continue
         fi
         # Skip test files (co-located *.test.jsx)
         if [[ "$BASENAME" == *.test ]]; then
+            continue
+        fi
+        # Allow subcomponents inside a widget's folder (e.g., MathSolver/ProblemDisplay.jsx)
+        if [ "$GRANDPARENT_NAME" = "$LAYER" ]; then
             continue
         fi
         # The .jsx file should be inside a folder with the same name
