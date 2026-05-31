@@ -1,17 +1,32 @@
-import { NavLink } from 'react-router-dom';
+import { useMemo } from 'react';
+import Navigation from '../Navigation/Navigation';
+import StarCounter from '../StarCounter/StarCounter';
+import { useAppContext } from '../../services/AppContext';
 import styles from './Header.module.css';
 
+const navItems = [
+  { label: 'Catalog', path: '/', icon: 'star' },
+  { label: 'Math', path: '/math', icon: 'math' },
+  { label: 'English', path: '/english', icon: 'abc' },
+  { label: 'Progress', path: '/progress', icon: 'progress' },
+  { label: 'Settings', path: '/settings', icon: 'settings' },
+];
+
 function Header() {
+  const { state } = useAppContext();
+
+  const totalStars = useMemo(() => {
+    const { mathStats, alphabetProgress } = state;
+    const mathStars = Math.floor(mathStats.totalCorrect / 2);
+    const englishStars = Math.floor(alphabetProgress.length / 5);
+    return mathStars + englishStars;
+  }, [state]);
+
   return (
     <header className={styles.header}>
       <span className={styles.brand}>MathApp</span>
-      <nav className={styles.nav}>
-        <NavLink to="/" className={({ isActive }) => isActive ? styles.active : undefined} end>Catalog</NavLink>
-        <NavLink to="/math" className={({ isActive }) => isActive ? styles.active : undefined}>Math</NavLink>
-        <NavLink to="/english" className={({ isActive }) => isActive ? styles.active : undefined}>English</NavLink>
-        <NavLink to="/progress" className={({ isActive }) => isActive ? styles.active : undefined}>Progress</NavLink>
-        <NavLink to="/settings" className={({ isActive }) => isActive ? styles.active : undefined}>Settings</NavLink>
-      </nav>
+      <Navigation items={navItems} />
+      <StarCounter count={totalStars} />
     </header>
   );
 }

@@ -1,4 +1,13 @@
 {
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
+    "ANTHROPIC_AUTH_TOKEN": "sk-d116a5389d2e43c788811ada86f11dde",
+    "ANTHROPIC_MODEL": "deepseek-chat",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-chat",
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
+    "DISABLE_TELEMETRY": "1",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "permissions": {
     "allow": [
       "WebSearch",
@@ -79,7 +88,41 @@
       "Bash(for f in \"src/utils/random.test.js\" \"src/utils/mathProblems.js\" \"src/utils/mathProblems.test.js\")",
       "Bash(do echo \"=== $f ===\")",
       "Bash(for f in \"src/utils/alphabetData.js\" \"src/utils/alphabetData.test.js\" \"src/utils/validateAnswer.js\" \"src/utils/validateAnswer.test.js\" \"src/hooks/useLocalStorage.js\" \"src/hooks/useLocalStorage.test.js\" \"src/hooks/useMathProblems.js\" \"src/hooks/useMathProblems.test.js\" \"src/services/appReducer.js\" \"src/services/appReducer.test.js\" \"src/services/storage.js\" \"src/services/storage.test.js\" \"src/services/AppContext.jsx\" \"src/services/AppContext.test.jsx\")",
-      "Bash(\"C:/Users/f6vff/AppData/Local/Microsoft/WindowsApps/python3.12.exe\" scripts/validate.py --action create --file src/services/AppContext.test.jsx)"
+      "Bash(\"C:/Users/f6vff/AppData/Local/Microsoft/WindowsApps/python3.12.exe\" scripts/validate.py --action create --file src/services/AppContext.test.jsx)",
+      "Bash(\"C:/Users/f6vff/AppData/Local/Microsoft/WindowsApps/python3.12.exe\" scripts/validate.py)",
+      "Bash(npm exec eslint:*)",
+      "Bash(\"C:/Users/f6vff/AppData/Local/Microsoft/WindowsApps/python3.12.exe\" scripts/validate.py --action create --file src/services/AppContext.jsx)",
+      "Bash(\"C:/Users/f6vff/AppData/Local/Microsoft/WindowsApps/python3.12.exe\" scripts/validate.py --action create --file src/hooks/useLocalStorage.js)",
+      "Bash(\"C:/Users/f6vff/AppData/Local/Microsoft/WindowsApps/python3.12.exe\" -c \"\nimport sys\nsys.stdout.reconfigure\\(encoding=''utf-8''\\)\nsummary = ''''''\nConfirmed lint rules:\n- hooks: CAN import from utils, services. CANNOT import from pages, widgets, components.\n- services: CAN import from utils. CANNOT import from pages, widgets, components, hooks.\n- utils: CANNOT import from ANY project layer.\n- AppContext.jsx \\(.jsx file in services/\\): The lint-quality check only flags PascalCase for .jsx in components/pages/widgets dirs.\n  But services/ is not one of the checked layers. src/services/AppContext.jsx is fine as .jsx with capital letter.\n''''''\nprint\\(summary\\)\n\")",
+      "Bash(\"C:/Users/f6vff/AppData/Local/Microsoft/WindowsApps/python3.12.exe\" scripts/validate.py --action create --file src/services/appReducer.js)",
+      "Bash(\"C:/Users/f6vff/AppData/Local/Microsoft/WindowsApps/python3.12.exe\" scripts/validate.py --action create --file src/services/storage.js)",
+      "Bash(python:*)",
+      "Bash(\"C:/Users/f6vff/AppData/Local/Microsoft/WindowsApps/python3\" -u -c \"import sys; print\\(''hello''\\); sys.stdout.flush\\(\\)\")",
+      "Bash(D:/math_app/scripts/validate.py)",
+      "Bash(cmd.exe //c \"python scripts/validate.py 2>&1\")",
+      "Bash(/c/Users/f6vff/AppData/Local/Microsoft/WindowsApps/python3.exe -u scripts/validate.py)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(dir /s /b \"D:\\\\math_app\\\\src\\\\pages\\\\*\" \"D:\\\\math_app\\\\src\\\\widgets\\\\*\" \"D:\\\\math_app\\\\src\\\\components\\\\*\" \"D:\\\\math_app\\\\src\\\\services\\\\*\" \"D:\\\\math_app\\\\src\\\\hooks\\\\*\")",
+      "Bash(npm --prefix:*)",
+      "Bash(npx vite build:*)",
+      "Bash(wc:*)",
+      "Bash(dir:*)",
+      "Bash(py:*)",
+      "Bash(/c/Users/f6vff/AppData/Local/Programs/Python/Python312/python.exe --version)",
+      "Bash(/c/Users/f6vff/AppData/Local/Microsoft/WindowsApps/python3.12.exe --version)",
+      "Bash(/c/Users/f6vff/AppData/Local/Microsoft/WindowsApps/python3.12.exe /d/math_app/scripts/validate.py)",
+      "Bash(git restore:*)",
+      "Bash(powershell.exe -Command \"Start-Process ''http://localhost:5173/''\")",
+      "Bash(start \"\" \"http://localhost:5173\")",
+      "Bash(cmd.exe /c start http://localhost:5175)",
+      "Bash(start http://localhost:5175)",
+      "Bash(powershell -command \"Start-Process ''http://localhost:5175''\")",
+      "Bash(cmd //c start http://localhost:5175)",
+      "Bash(explorer:*)",
+      "Bash(powershell -Command \"& {Start-Process ''http://localhost:5175''}\")",
+      "Bash(powershell -Command \"Start-Process ''http://localhost:5175''\")"
     ]
-  }
+  },
+  "alwaysThinkingEnabled": true
 }

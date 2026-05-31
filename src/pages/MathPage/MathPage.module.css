@@ -1,0 +1,18 @@
+.pageContainer {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #4a90d9;
+  margin: 0 0 1.5rem;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}

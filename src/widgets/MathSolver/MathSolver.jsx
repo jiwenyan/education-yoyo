@@ -6,7 +6,7 @@ import ScoreBar from './ScoreBar';
 import { useMathProblems } from '../../hooks/useMathProblems';
 import styles from './MathSolver.module.css';
 
-export default function MathSolver({ difficulty = 1, count = 10 }) {
+export default function MathSolver({ difficulty = 1, count = 10, onAttempt }) {
   const {
     currentProblem,
     score,
@@ -30,8 +30,11 @@ export default function MathSolver({ difficulty = 1, count = 10 }) {
 
   const handleSubmit = useCallback(() => {
     if (!inputValue) return;
-    submitAnswer(inputValue);
-  }, [inputValue, submitAnswer]);
+    const result = submitAnswer(inputValue);
+    if (result && onAttempt) {
+      onAttempt(result);
+    }
+  }, [inputValue, submitAnswer, onAttempt]);
 
   const handleNext = useCallback(() => {
     setInputValue('');

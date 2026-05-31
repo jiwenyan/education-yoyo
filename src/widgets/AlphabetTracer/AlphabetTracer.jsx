@@ -5,7 +5,7 @@ import LetterPrompt from './LetterPrompt';
 import AudioButton from './AudioButton';
 import styles from './AlphabetTracer.module.css';
 
-export default function AlphabetTracer({ startLetter }) {
+export default function AlphabetTracer({ startLetter, onLetterComplete }) {
   const startIndex = useMemo(() => {
     const idx = alphabetData.findIndex((e) => e.letter === startLetter);
     return idx >= 0 ? idx : 0;
@@ -24,13 +24,17 @@ export default function AlphabetTracer({ startLetter }) {
     const newCompleted = [...completedLetters, letter];
     setCompletedLetters(newCompleted);
 
+    if (onLetterComplete) {
+      onLetterComplete(letter);
+    }
+
     const nextIndex = currentIndex + 1;
     if (nextIndex >= alphabetData.length) {
       setIsComplete(true);
     } else {
       setCurrentIndex(nextIndex);
     }
-  }, [currentIndex, current, completedLetters]);
+  }, [currentIndex, current, completedLetters, onLetterComplete]);
 
   const handleReset = useCallback(() => {
     setCurrentIndex(startIndex);
