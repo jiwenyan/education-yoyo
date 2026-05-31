@@ -5,8 +5,8 @@ const OPERATORS = ['+', '-', '×'];
 /**
  * Generates a single math problem with a given difficulty (1-5).
  *
- * Difficulty 1: single-digit addition (0-9 + 0-9)
- * Difficulty 2: single-digit addition/subtraction (0-9 ± 0-9), result ≥ 0
+ * Difficulty 1: single-digit addition, result 10-18 (e.g. 6+7=13)
+ * Difficulty 2: single-digit addition (result 10-18) or subtraction (0-9)
  * Difficulty 3: two-digit addition (10-99 + 10-99)
  * Difficulty 4: two-digit addition/subtraction (10-99 ± 10-99), result ≥ 0
  * Difficulty 5: mixed operations, larger numbers (up to 999)
@@ -17,8 +17,10 @@ export function generateProblem(difficulty = 1) {
 
   switch (clampedDifficulty) {
     case 1:
-      a = randInt(0, 9);
-      b = randInt(0, 9);
+      // Single-digit addition with result in [10, 18]
+      // a in [2, 9], b in [10-a, 9] so that a+b >= 10 and a+b <= 18
+      a = randInt(2, 9);
+      b = randInt(10 - a, 9);
       operator = '+';
       break;
     case 2:
@@ -27,8 +29,9 @@ export function generateProblem(difficulty = 1) {
         a = randInt(0, 9);
         b = randInt(0, a); // ensure non-negative result
       } else {
-        a = randInt(0, 9);
-        b = randInt(0, 9);
+        // For additions in difficulty 2, keep result in [10, 18]
+        a = randInt(2, 9);
+        b = randInt(10 - a, 9);
       }
       break;
     case 3:
@@ -60,8 +63,8 @@ export function generateProblem(difficulty = 1) {
       }
       break;
     default:
-      a = randInt(0, 9);
-      b = randInt(0, 9);
+      a = randInt(2, 9);
+      b = randInt(10 - a, 9);
       operator = '+';
   }
 

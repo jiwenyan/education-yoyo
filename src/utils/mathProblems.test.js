@@ -10,14 +10,16 @@ describe('generateProblem', () => {
     expect(problem).toHaveProperty('difficulty');
   });
 
-  it('generates addition problems for difficulty 1', () => {
+  it('generates addition problems for difficulty 1 with result between 10-18', () => {
     for (let i = 0; i < 50; i++) {
       const problem = generateProblem(1);
       expect(problem.operator).toBe('+');
-      expect(problem.a).toBeGreaterThanOrEqual(0);
+      expect(problem.a).toBeGreaterThanOrEqual(2);
       expect(problem.a).toBeLessThanOrEqual(9);
-      expect(problem.b).toBeGreaterThanOrEqual(0);
+      expect(problem.b).toBeGreaterThanOrEqual(1);
       expect(problem.b).toBeLessThanOrEqual(9);
+      expect(problem.correctAnswer).toBeGreaterThanOrEqual(10);
+      expect(problem.correctAnswer).toBeLessThanOrEqual(18);
       expect(problem.correctAnswer).toBe(problem.a + problem.b);
     }
   });
