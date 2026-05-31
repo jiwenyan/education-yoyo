@@ -3,6 +3,7 @@ import ProblemDisplay from './ProblemDisplay';
 import AnswerInput from './AnswerInput';
 import FeedbackOverlay from './FeedbackOverlay';
 import ScoreBar from './ScoreBar';
+import Making10Help from './Making10Help';
 import { useMathProblems } from '../../hooks/useMathProblems';
 import styles from './MathSolver.module.css';
 
@@ -19,6 +20,7 @@ export default function MathSolver({ difficulty = 1, count = 10, onAttempt }) {
   } = useMathProblems(difficulty, count);
 
   const [inputValue, setInputValue] = useState('');
+  const [showHelp, setShowHelp] = useState(false);
 
   const handleDigit = useCallback((digit) => {
     setInputValue((prev) => prev + digit);
@@ -74,6 +76,15 @@ export default function MathSolver({ difficulty = 1, count = 10, onAttempt }) {
 
   return (
     <div className={styles.container} data-testid="math-solver">
+      <button
+        className={styles.helpBtn}
+        onClick={() => setShowHelp(true)}
+        data-testid="help-btn"
+        aria-label="Help with making 10 strategy"
+      >
+        ?
+      </button>
+
       <ScoreBar correct={score} total={count} />
 
       <ProblemDisplay
@@ -95,6 +106,15 @@ export default function MathSolver({ difficulty = 1, count = 10, onAttempt }) {
           correct={feedback.correct}
           correctAnswer={feedback.correctAnswer}
           onNext={handleNext}
+        />
+      )}
+
+      {showHelp && (
+        <Making10Help
+          a={currentProblem.a}
+          b={currentProblem.b}
+          operator={currentProblem.operator}
+          onClose={() => setShowHelp(false)}
         />
       )}
     </div>

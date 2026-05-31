@@ -71,6 +71,7 @@ export default function AnswerInput({ value, onDigit, onBackspace, onSubmit, dis
           className={styles.backspace}
           onClick={onBackspace}
           disabled={disabled || value.length === 0}
+          data-testid="backspace-btn"
         >
           ⌫
         </button>
@@ -78,6 +79,7 @@ export default function AnswerInput({ value, onDigit, onBackspace, onSubmit, dis
           className={styles.submit}
           onClick={onSubmit}
           disabled={disabled || value.length === 0}
+          data-testid="submit-btn"
         >
           OK
         </button>

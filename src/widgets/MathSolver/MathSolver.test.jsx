@@ -9,9 +9,29 @@ describe('MathSolver', () => {
     expect(screen.getByTestId('score-bar')).toBeInTheDocument();
   });
 
-  it('renders the question mark', () => {
+  it('renders help button', () => {
     render(<MathSolver difficulty={1} count={3} />);
-    expect(screen.getByText('?')).toBeInTheDocument();
+    expect(screen.getByTestId('help-btn')).toBeInTheDocument();
+  });
+
+  it('shows Making10Help overlay when help button is clicked', () => {
+    render(<MathSolver difficulty={1} count={3} />);
+    fireEvent.click(screen.getByTestId('help-btn'));
+    expect(screen.getByTestId('making-10-help')).toBeInTheDocument();
+  });
+
+  it('hides Making10Help overlay when close button is clicked', () => {
+    render(<MathSolver difficulty={1} count={3} />);
+    fireEvent.click(screen.getByTestId('help-btn'));
+    expect(screen.getByTestId('making-10-help')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('making-10-close'));
+    expect(screen.queryByTestId('making-10-help')).not.toBeInTheDocument();
+  });
+
+  it('renders the question mark in the problem display', () => {
+    render(<MathSolver difficulty={1} count={3} />);
+    const display = screen.getByTestId('problem-display');
+    expect(display).toHaveTextContent('?');
   });
 
   it('accepts digit input', () => {
@@ -25,14 +45,14 @@ describe('MathSolver', () => {
     fireEvent.click(screen.getByTestId('digit-btn-5'));
     fireEvent.click(screen.getByTestId('digit-btn-3'));
     expect(screen.getByTestId('answer-display')).toHaveTextContent('53');
-    fireEvent.click(screen.getByText('⌫'));
+    fireEvent.click(screen.getByTestId('backspace-btn'));
     expect(screen.getByTestId('answer-display')).toHaveTextContent('5');
   });
 
   it('shows feedback after submitting answer', () => {
     render(<MathSolver difficulty={1} count={3} />);
     fireEvent.click(screen.getByTestId('digit-btn-5'));
-    fireEvent.click(screen.getByText('OK'));
+    fireEvent.click(screen.getByTestId('submit-btn'));
     expect(screen.getByTestId('feedback-overlay')).toBeInTheDocument();
   });
 
@@ -40,7 +60,7 @@ describe('MathSolver', () => {
     render(<MathSolver difficulty={1} count={1} />);
 
     fireEvent.click(screen.getByTestId('digit-btn-5'));
-    const okBtn = screen.getByText('OK');
+    const okBtn = screen.getByTestId('submit-btn');
     // OK button is disabled when no input, but we have '5' entered so it should be enabled
     expect(okBtn).toBeEnabled();
     fireEvent.click(okBtn);
@@ -54,7 +74,7 @@ describe('MathSolver', () => {
     render(<MathSolver difficulty={1} count={1} />);
 
     fireEvent.click(screen.getByTestId('digit-btn-5'));
-    fireEvent.click(screen.getByText('OK'));
+    fireEvent.click(screen.getByTestId('submit-btn'));
     fireEvent.click(screen.getByText('Next'));
 
     fireEvent.click(screen.getByText('Try Again'));
