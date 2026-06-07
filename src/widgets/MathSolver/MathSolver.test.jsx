@@ -130,4 +130,16 @@ describe('MathSolver', () => {
     expect(screen.getByTestId('problem-display')).toBeInTheDocument();
     expect(screen.getByTestId('problem-display')).toHaveTextContent('-');
   });
+
+  it('shows BreakTenHelp when help is clicked for subtraction', () => {
+    render(<MathSolver difficulty={3} count={3} operation="subtraction" />);
+    fireEvent.click(screen.getByTestId('help-btn'));
+    expect(screen.getByTestId('break-ten-help')).toBeInTheDocument();
+  });
+
+  it('shows Making10Help when help is clicked for addition', () => {
+    render(<MathSolver difficulty={1} count={3} operation="addition" />);
+    fireEvent.click(screen.getByTestId('help-btn'));
+    expect(screen.getByTestId('making-10-help')).toBeInTheDocument();
+  });
 });

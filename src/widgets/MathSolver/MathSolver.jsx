@@ -4,6 +4,7 @@ import AnswerInput from './AnswerInput';
 import FeedbackOverlay from './FeedbackOverlay';
 import ScoreBar from './ScoreBar';
 import Making10Help from './Making10Help';
+import BreakTenHelp from './BreakTenHelp';
 import { useMathProblems } from '../../hooks/useMathProblems';
 import styles from './MathSolver.module.css';
 
@@ -122,8 +123,17 @@ export default function MathSolver({
         />
       )}
 
-      {showHelp && (
+      {showHelp && currentProblem.operator === '+' && (
         <Making10Help
+          a={currentProblem.a}
+          b={currentProblem.b}
+          operator={currentProblem.operator}
+          onClose={() => setShowHelp(false)}
+        />
+      )}
+
+      {showHelp && currentProblem.operator === '-' && (
+        <BreakTenHelp
           a={currentProblem.a}
           b={currentProblem.b}
           operator={currentProblem.operator}
