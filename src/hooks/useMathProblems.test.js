@@ -106,4 +106,22 @@ describe('useMathProblems', () => {
     expect(r.incorrect).toBe(4);
     expect(r.percentage).toBe(20);
   });
+
+  // --- New: operation support ---
+
+  it('accepts options object with operation', () => {
+    const { result } = renderHook(() => useMathProblems({ difficulty: 1, operation: 'division', count: 3 }));
+
+    expect(result.current.currentProblem).toBeTruthy();
+    expect(result.current.currentProblem.operator).toBe('÷');
+    expect(result.current.currentProblem.a % result.current.currentProblem.b).toBe(0);
+    expect(result.current.totalProblems).toBe(3);
+  });
+
+  it('still works with positional args for backward compat', () => {
+    const { result } = renderHook(() => useMathProblems(1, 5));
+
+    expect(result.current.currentProblem).toBeTruthy();
+    expect(result.current.totalProblems).toBe(5);
+  });
 });

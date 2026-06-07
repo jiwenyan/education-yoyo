@@ -14,6 +14,11 @@ describe('MathSolver', () => {
     expect(screen.getByTestId('help-btn')).toBeInTheDocument();
   });
 
+  it('help button has generic aria-label', () => {
+    render(<MathSolver difficulty={1} count={3} />);
+    expect(screen.getByTestId('help-btn')).toHaveAttribute('aria-label', 'Help');
+  });
+
   it('shows Making10Help overlay when help button is clicked', () => {
     render(<MathSolver difficulty={1} count={3} />);
     fireEvent.click(screen.getByTestId('help-btn'));
@@ -61,7 +66,6 @@ describe('MathSolver', () => {
 
     fireEvent.click(screen.getByTestId('digit-btn-5'));
     const okBtn = screen.getByTestId('submit-btn');
-    // OK button is disabled when no input, but we have '5' entered so it should be enabled
     expect(okBtn).toBeEnabled();
     fireEvent.click(okBtn);
     fireEvent.click(screen.getByText('Next'));
@@ -79,5 +83,51 @@ describe('MathSolver', () => {
 
     fireEvent.click(screen.getByText('Try Again'));
     expect(screen.getByTestId('problem-display')).toBeInTheDocument();
+  });
+
+  // --- New tests ---
+
+  it('renders division problems when operation is division', () => {
+    render(<MathSolver difficulty={1} count={3} operation="division" />);
+    expect(screen.getByTestId('problem-display')).toBeInTheDocument();
+    expect(screen.getByTestId('problem-display')).toHaveTextContent('÷');
+  });
+
+  it('shows Change Operation button on completion when onChangeOperation is provided', () => {
+    const handleChangeOp = vi.fn();
+    render(
+      <MathSolver
+        difficulty={1}
+        count={1}
+        operation="addition"
+        onChangeOperation={handleChangeOp}
+      />
+    );
+
+    fireEvent.click(screen.getByTestId('digit-btn-5'));
+    fireEvent.click(screen.getByTestId('submit-btn'));
+    fireEvent.click(screen.getByText('Next'));
+
+    expect(screen.getByTestId('change-op-btn')).toBeInTheDocument();
+    expect(screen.getByText('Change Operation')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId('change-op-btn'));
+    expect(handleChangeOp).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not show Change Operation button when onChangeOperation is not provided', () => {
+    render(<MathSolver difficulty={1} count={1} operation="addition" />);
+
+    fireEvent.click(screen.getByTestId('digit-btn-5'));
+    fireEvent.click(screen.getByTestId('submit-btn'));
+    fireEvent.click(screen.getByText('Next'));
+
+    expect(screen.queryByTestId('change-op-btn')).not.toBeInTheDocument();
+  });
+
+  it('renders subtraction problems when operation is subtraction', () => {
+    render(<MathSolver difficulty={1} count={3} operation="subtraction" />);
+    expect(screen.getByTestId('problem-display')).toBeInTheDocument();
+    expect(screen.getByTestId('problem-display')).toHaveTextContent('-');
   });
 });

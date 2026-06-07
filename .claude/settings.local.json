@@ -8,13 +8,6 @@
     "DISABLE_TELEMETRY": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
-  
-  "mcpServers": {
-    "cloudbase": {
-      "command": "npx",
-      "args": ["@cloudbase/cloudbase-mcp@latest"]
-    }
-  },
   "permissions": {
     "allow": [
       "WebSearch",
@@ -135,8 +128,17 @@
       "Bash(npm config get proxy)",
       "Bash(npm config:*)",
       "Bash(netsh.exe interface:*)",
-      "Bash(nslookup github.com)"
+      "Bash(nslookup github.com)",
+      "Bash(npx react-scripts test --watchAll=false --verbose)"
     ]
   },
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": [
+        "@cloudbase/cloudbase-mcp@latest"
+      ]
+    }
+  }
 }

@@ -3,7 +3,22 @@ import { generateProblems } from '../utils/mathProblems';
 import { validateAnswer } from '../utils/validateAnswer';
 
 export function useMathProblems(difficulty = 1, count = 10) {
-  const [problems, setProblems] = useState(() => generateProblems(count, difficulty));
+  // Support both old positional args and new options object
+  const opts = typeof difficulty === 'object' && difficulty !== null
+    ? difficulty
+    : { difficulty, count };
+  const { difficulty: diff, operation, count: cnt } = opts;
+  const resolvedDifficulty = diff ?? 1;
+  const resolvedCount = cnt ?? count;
+  const resolvedOperation = operation ?? null;
+
+  const generateOpts = resolvedOperation
+    ? { difficulty: resolvedDifficulty, operation: resolvedOperation }
+    : resolvedDifficulty;
+
+  const [problems, setProblems] = useState(
+    () => generateProblems(resolvedCount, generateOpts)
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
@@ -46,13 +61,13 @@ export function useMathProblems(difficulty = 1, count = 10) {
   }, [currentIndex, problems.length]);
 
   const reset = useCallback(() => {
-    setProblems(generateProblems(count, difficulty));
+    setProblems(generateProblems(resolvedCount, generateOpts));
     setCurrentIndex(0);
     setScore(0);
     setIsComplete(false);
     setFeedback(null);
     scoreRef.current = 0;
-  }, [count, difficulty]);
+  }, [resolvedCount, resolvedDifficulty, resolvedOperation]);
 
   const report = useCallback(() => {
     return {

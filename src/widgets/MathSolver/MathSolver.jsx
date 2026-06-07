@@ -7,7 +7,13 @@ import Making10Help from './Making10Help';
 import { useMathProblems } from '../../hooks/useMathProblems';
 import styles from './MathSolver.module.css';
 
-export default function MathSolver({ difficulty = 1, count = 10, onAttempt }) {
+export default function MathSolver({
+  difficulty = 1,
+  count = 10,
+  operation = 'addition',
+  onAttempt,
+  onChangeOperation,
+}) {
   const {
     currentProblem,
     score,
@@ -17,7 +23,7 @@ export default function MathSolver({ difficulty = 1, count = 10, onAttempt }) {
     nextProblem,
     reset,
     report,
-  } = useMathProblems(difficulty, count);
+  } = useMathProblems({ difficulty, operation, count });
 
   const [inputValue, setInputValue] = useState('');
   const [showHelp, setShowHelp] = useState(false);
@@ -48,10 +54,6 @@ export default function MathSolver({ difficulty = 1, count = 10, onAttempt }) {
     reset();
   }, [reset]);
 
-  const currentIndex = currentProblem
-    ? currentProblem.difficulty
-    : 0;
-
   if (isComplete) {
     const r = report();
     return (
@@ -64,9 +66,20 @@ export default function MathSolver({ difficulty = 1, count = 10, onAttempt }) {
             <div>Incorrect: {r.incorrect}</div>
             <div>Score: {r.percentage}%</div>
           </div>
-          <button className={styles.resetBtn} onClick={handleReset}>
-            Try Again
-          </button>
+          <div className={styles.completeButtons}>
+            <button className={styles.resetBtn} onClick={handleReset}>
+              Try Again
+            </button>
+            {onChangeOperation && (
+              <button
+                className={styles.changeOpBtn}
+                onClick={onChangeOperation}
+                data-testid="change-op-btn"
+              >
+                Change Operation
+              </button>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -80,7 +93,7 @@ export default function MathSolver({ difficulty = 1, count = 10, onAttempt }) {
         className={styles.helpBtn}
         onClick={() => setShowHelp(true)}
         data-testid="help-btn"
-        aria-label="Help with making 10 strategy"
+        aria-label="Help"
       >
         ?
       </button>

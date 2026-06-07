@@ -1,86 +1,231 @@
 import { randInt } from './random';
 
-const OPERATORS = ['+', '-', '×'];
+const OPERATORS = ['+', '-', '×', '÷'];
 
 /**
- * Generates a single math problem with a given difficulty (1-5).
- *
- * Difficulty 1: single-digit addition, result 10-18 (e.g. 6+7=13)
- * Difficulty 2: single-digit addition (result 10-18) or subtraction (0-9)
- * Difficulty 3: two-digit addition (10-99 + 10-99)
- * Difficulty 4: two-digit addition/subtraction (10-99 ± 10-99), result ≥ 0
- * Difficulty 5: mixed operations, larger numbers (up to 999)
+ * Normalizes the opts parameter for backward compatibility.
+ * If opts is a number (or null/undefined), treat it as difficulty.
+ * If opts is an object, extract { difficulty, operation }.
  */
-export function generateProblem(difficulty = 1) {
-  const clampedDifficulty = Math.max(1, Math.min(5, difficulty));
+function normalizeOpts(opts) {
+  if (typeof opts === 'number' || opts === undefined || opts === null) {
+    return { difficulty: opts ?? 1, operation: null };
+  }
+  return { difficulty: opts.difficulty ?? 1, operation: opts.operation ?? null };
+}
+
+/**
+ * Generates a single math problem.
+ *
+ * @param {number|object} opts - Either a difficulty number (1-5) for backward compat,
+ *   or an object { difficulty, operation }.
+ * @param {number} [opts.difficulty=1] - Difficulty level 1-5.
+ * @param {string} [opts.operation] - Specific operation: 'addition', 'subtraction',
+ *   'multiplication', 'division'. If null, behaves like the old random pick.
+ */
+export function generateProblem(opts = 1) {
+  const { difficulty: rawDifficulty, operation } = normalizeOpts(opts);
+  const clampedDifficulty = Math.max(1, Math.min(5, rawDifficulty));
+
   let a, b, operator;
 
-  switch (clampedDifficulty) {
-    case 1:
-      // Single-digit addition with result in [10, 18]
-      // a in [2, 9], b in [10-a, 9] so that a+b >= 10 and a+b <= 18
+  if (operation) {
+    operator = OPERATOR_SYMBOLS[operation];
+    if (!operator) {
+      // Fallback for unknown operation
       a = randInt(2, 9);
       b = randInt(10 - a, 9);
       operator = '+';
-      break;
-    case 2:
-      operator = pickOperator(clampedDifficulty);
-      if (operator === '-') {
-        a = randInt(0, 9);
-        b = randInt(0, a); // ensure non-negative result
-      } else {
-        // For additions in difficulty 2, keep result in [10, 18]
-        a = randInt(2, 9);
-        b = randInt(10 - a, 9);
-      }
-      break;
-    case 3:
-      a = randInt(10, 99);
-      b = randInt(10, 99);
-      operator = '+';
-      break;
-    case 4:
-      operator = pickOperator(clampedDifficulty);
-      if (operator === '-') {
-        a = randInt(10, 99);
-        b = randInt(10, a); // ensure non-negative result
-      } else {
-        a = randInt(10, 99);
-        b = randInt(10, 99);
-      }
-      break;
-    case 5:
-      operator = pickOperator(clampedDifficulty);
-      if (operator === '+') {
-        a = randInt(100, 999);
-        b = randInt(100, 999);
-      } else if (operator === '-') {
-        a = randInt(100, 999);
-        b = randInt(100, a);
-      } else {
-        a = randInt(10, 99);
-        b = randInt(2, 12);
-      }
-      break;
-    default:
-      a = randInt(2, 9);
-      b = randInt(10 - a, 9);
-      operator = '+';
+    } else {
+      const result = generateForOperation(operation, clampedDifficulty);
+      a = result.a;
+      b = result.b;
+    }
+  } else {
+    // Backward compat: pick operator the old way
+    operator = pickOperator(clampedDifficulty);
+    const result = generateForOldCompat(operator, clampedDifficulty);
+    a = result.a;
+    b = result.b;
   }
 
   const correctAnswer = computeAnswer(a, b, operator);
   return { a, b, operator, correctAnswer, difficulty: clampedDifficulty };
 }
 
+const OPERATOR_SYMBOLS = {
+  addition: '+',
+  subtraction: '-',
+  multiplication: '×',
+  division: '÷',
+};
+
+/**
+ * Generates { a, b } for a specific operation at a given difficulty.
+ */
+function generateForOperation(operation, difficulty) {
+  switch (operation) {
+    case 'addition':
+      return generateAddition(difficulty);
+    case 'subtraction':
+      return generateSubtraction(difficulty);
+    case 'multiplication':
+      return generateMultiplication(difficulty);
+    case 'division':
+      return generateDivision(difficulty);
+    default:
+      return generateAddition(difficulty);
+  }
+}
+
+/**
+ * Generates an addition problem.
+ * Difficulty 1-2: single-digit, result 10-18
+ * Difficulty 3-4: two-digit + two-digit
+ * Difficulty 5: three-digit + three-digit
+ */
+function generateAddition(difficulty) {
+  let a, b;
+  if (difficulty <= 2) {
+    a = randInt(2, 9);
+    b = randInt(10 - a, 9);
+  } else if (difficulty <= 4) {
+    a = randInt(10, 99);
+    b = randInt(10, 99);
+  } else {
+    a = randInt(100, 999);
+    b = randInt(100, 999);
+  }
+  return { a, b };
+}
+
+/**
+ * Generates a subtraction problem (non-negative result).
+ * Difficulty 1-2: single-digit
+ * Difficulty 3-4: two-digit
+ * Difficulty 5: three-digit
+ */
+function generateSubtraction(difficulty) {
+  let a, b;
+  if (difficulty <= 2) {
+    a = randInt(11, 15);
+    b = randInt(1, Math.min(10, a));
+  } else {
+    a = randInt(11, 20);
+    b = randInt(1, Math.min(15, a));
+  }
+  return { a, b };
+}
+
+/**
+ * Generates a multiplication problem.
+ * Diff 1: 2-5 × 2-5
+ * Diff 2: 2-9 × 2-9
+ * Diff 3: 2-12 × 2-12
+ * Diff 4: 10-99 × 2-9
+ * Diff 5: 10-99 × 10-99
+ */
+function generateMultiplication(difficulty) {
+  let a, b;
+  switch (difficulty) {
+    case 1:
+      a = randInt(2, 5);
+      b = randInt(2, 5);
+      break;
+    case 2:
+      a = randInt(2, 9);
+      b = randInt(2, 9);
+      break;
+    case 3:
+      a = randInt(2, 12);
+      b = randInt(2, 12);
+      break;
+    case 4:
+      a = randInt(10, 99);
+      b = randInt(2, 9);
+      break;
+    case 5:
+      a = randInt(10, 99);
+      b = randInt(10, 99);
+      break;
+    default:
+      a = randInt(2, 5);
+      b = randInt(2, 5);
+  }
+  return { a, b };
+}
+
+/**
+ * Generates a division problem (integer quotient, no remainder).
+ * Generate divisor (b) and quotient first, then compute a = b * quotient.
+ * Diff 1: quotients 2-5
+ * Diff 2: quotients 2-9
+ * Diff 3: quotients 2-12
+ * Diff 4: up to 99 ÷ single-digit
+ * Diff 5: up to 99 ÷ 99
+ */
+function generateDivision(difficulty) {
+  let b, quotient;
+  switch (difficulty) {
+    case 1:
+      b = randInt(2, 5);
+      quotient = randInt(2, 5);
+      break;
+    case 2:
+      b = randInt(2, 9);
+      quotient = randInt(2, 9);
+      break;
+    case 3:
+      b = randInt(2, 12);
+      quotient = randInt(2, 12);
+      break;
+    case 4:
+      b = randInt(2, 9);
+      quotient = randInt(2, 11);
+      break;
+    case 5:
+      b = randInt(2, 99);
+      quotient = randInt(2, Math.floor(99 / b));
+      break;
+    default:
+      b = randInt(2, 5);
+      quotient = randInt(2, 5);
+  }
+  // Ensure quotient is at least 2 for diff 5 when b is large
+  if (quotient < 2) quotient = 2;
+  const a = b * quotient;
+  return { a, b };
+}
+
+/**
+ * Legacy: generates { a, b } for the old random-operator approach.
+ */
+function generateForOldCompat(operator, difficulty) {
+  switch (operator) {
+    case '+':
+      return generateAddition(difficulty);
+    case '-':
+      return generateSubtraction(difficulty);
+    case '×':
+      return generateMultiplication(difficulty);
+    default:
+      return generateAddition(difficulty);
+  }
+}
+
 /**
  * Generates an array of unique math problems.
+ *
+ * @param {number} count - Number of problems to generate.
+ * @param {number|object} difficultyOrOpts - Either a difficulty number or
+ *   an options object { difficulty, operation }.
  */
-export function generateProblems(count = 10, difficulty = 1) {
+export function generateProblems(count = 10, difficultyOrOpts = 1) {
   const problems = [];
   const seen = new Set();
 
   while (problems.length < count) {
-    const problem = generateProblem(difficulty);
+    const problem = generateProblem(difficultyOrOpts);
     const key = `${problem.a}${problem.operator}${problem.b}`;
     if (!seen.has(key)) {
       seen.add(key);
@@ -93,6 +238,13 @@ export function generateProblems(count = 10, difficulty = 1) {
 
 function pickOperator(difficulty) {
   if (difficulty <= 1 || difficulty === 3) return '+';
+  // For difficulty 2: + or -; for 4: + or -; for 5: +, -, or ×
+  if (difficulty === 5) {
+    const pick = randInt(0, 2);
+    if (pick === 0) return '+';
+    if (pick === 1) return '-';
+    return '×';
+  }
   return randInt(0, 1) === 0 ? '+' : '-';
 }
 
@@ -104,6 +256,8 @@ function computeAnswer(a, b, operator) {
       return a - b;
     case '×':
       return a * b;
+    case '÷':
+      return a / b;
     default:
       return 0;
   }
