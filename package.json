@@ -15,6 +15,7 @@
     "lint:structure": "bash scripts/lint-structure.sh"
   },
   "dependencies": {
+    "@cloudbase/js-sdk": "^3.3.13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0"

@@ -8,6 +8,13 @@
     "DISABLE_TELEMETRY": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
+  
+  "mcpServers": {
+    "cloudbase": {
+      "command": "npx",
+      "args": ["@cloudbase/cloudbase-mcp@latest"]
+    }
+  },
   "permissions": {
     "allow": [
       "WebSearch",
@@ -121,7 +128,14 @@
       "Bash(cmd //c start http://localhost:5175)",
       "Bash(explorer:*)",
       "Bash(powershell -Command \"& {Start-Process ''http://localhost:5175''}\")",
-      "Bash(powershell -Command \"Start-Process ''http://localhost:5175''\")"
+      "Bash(powershell -Command \"Start-Process ''http://localhost:5175''\")",
+      "Bash(exit 0)",
+      "Bash(npx skills:*)",
+      "Bash(git config:*)",
+      "Bash(npm config get proxy)",
+      "Bash(npm config:*)",
+      "Bash(netsh.exe interface:*)",
+      "Bash(nslookup github.com)"
     ]
   },
   "alwaysThinkingEnabled": true
