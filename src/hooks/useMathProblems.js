@@ -1,23 +1,30 @@
 import { useState, useCallback, useRef } from 'react';
-import { generateProblems } from '../utils/mathProblems';
+import { generateProblems, generateGradeBasedMultiplication } from '../utils/mathProblems';
 import { validateAnswer } from '../utils/validateAnswer';
+
+function generateProblemsSet(resolvedDifficulty, resolvedOperation, resolvedGrade, resolvedCount) {
+  if (resolvedGrade != null) {
+    return generateGradeBasedMultiplication(resolvedGrade, resolvedCount);
+  }
+  const generateOpts = resolvedOperation
+    ? { difficulty: resolvedDifficulty, operation: resolvedOperation }
+    : resolvedDifficulty;
+  return generateProblems(resolvedCount, generateOpts);
+}
 
 export function useMathProblems(difficulty = 1, count = 10) {
   // Support both old positional args and new options object
   const opts = typeof difficulty === 'object' && difficulty !== null
     ? difficulty
     : { difficulty, count };
-  const { difficulty: diff, operation, count: cnt } = opts;
+  const { difficulty: diff, operation, count: cnt, grade } = opts;
   const resolvedDifficulty = diff ?? 1;
   const resolvedCount = cnt ?? count;
   const resolvedOperation = operation ?? null;
-
-  const generateOpts = resolvedOperation
-    ? { difficulty: resolvedDifficulty, operation: resolvedOperation }
-    : resolvedDifficulty;
+  const resolvedGrade = grade ?? null;
 
   const [problems, setProblems] = useState(
-    () => generateProblems(resolvedCount, generateOpts)
+    () => generateProblemsSet(resolvedDifficulty, resolvedOperation, resolvedGrade, resolvedCount)
   );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -61,13 +68,13 @@ export function useMathProblems(difficulty = 1, count = 10) {
   }, [currentIndex, problems.length]);
 
   const reset = useCallback(() => {
-    setProblems(generateProblems(resolvedCount, generateOpts));
+    setProblems(generateProblemsSet(resolvedDifficulty, resolvedOperation, resolvedGrade, resolvedCount));
     setCurrentIndex(0);
     setScore(0);
     setIsComplete(false);
     setFeedback(null);
     scoreRef.current = 0;
-  }, [resolvedCount, resolvedDifficulty, resolvedOperation]);
+  }, [resolvedCount, resolvedDifficulty, resolvedOperation, resolvedGrade]);
 
   const report = useCallback(() => {
     return {

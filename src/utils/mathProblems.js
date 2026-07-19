@@ -1,4 +1,5 @@
 import { randInt } from './random';
+import { generateMultiplicationByGrade } from './multiplicationTables';
 
 const OPERATORS = ['+', '-', '×', '÷'];
 
@@ -246,6 +247,17 @@ function pickOperator(difficulty) {
     return '×';
   }
   return randInt(0, 1) === 0 ? '+' : '-';
+}
+
+/**
+ * Generates grade-based multiplication problems.
+ * Delegates to multiplicationTables.generateMultiplicationByGrade().
+ *
+ * @param {number} grade - Grade level (2-5).
+ * @param {number} count - Number of problems to generate.
+ */
+export function generateGradeBasedMultiplication(grade, count) {
+  return generateMultiplicationByGrade(grade, count);
 }
 
 function computeAnswer(a, b, operator) {

@@ -5,6 +5,7 @@ import FeedbackOverlay from './FeedbackOverlay';
 import ScoreBar from './ScoreBar';
 import Making10Help from './Making10Help';
 import BreakTenHelp from './BreakTenHelp';
+import ArrayHelp from './ArrayHelp';
 import { useMathProblems } from '../../hooks/useMathProblems';
 import styles from './MathSolver.module.css';
 
@@ -12,6 +13,7 @@ export default function MathSolver({
   difficulty = 1,
   count = 10,
   operation = 'addition',
+  grade = null,
   onAttempt,
   onChangeOperation,
 }) {
@@ -24,7 +26,7 @@ export default function MathSolver({
     nextProblem,
     reset,
     report,
-  } = useMathProblems({ difficulty, operation, count });
+  } = useMathProblems({ difficulty, operation, count, grade });
 
   const [inputValue, setInputValue] = useState('');
   const [showHelp, setShowHelp] = useState(false);
@@ -134,6 +136,15 @@ export default function MathSolver({
 
       {showHelp && currentProblem.operator === '-' && (
         <BreakTenHelp
+          a={currentProblem.a}
+          b={currentProblem.b}
+          operator={currentProblem.operator}
+          onClose={() => setShowHelp(false)}
+        />
+      )}
+
+      {showHelp && currentProblem.operator === '×' && (
+        <ArrayHelp
           a={currentProblem.a}
           b={currentProblem.b}
           operator={currentProblem.operator}
